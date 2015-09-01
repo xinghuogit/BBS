@@ -24,12 +24,15 @@ import java.sql.*;
  */
 public class JDBC {
 
+	/**
+	 * @return connection 返回一个数据库的连接
+	 */
 	public static Connection getConnection() {
 		Connection connection = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			DriverManager.getConnection("jdbc:mysql://localhost:3306/xhbbs",
-					"root", "root");
+			connection = DriverManager.getConnection(
+					"jdbc:mysql://localhost:3306/xhbbs", "root", "root");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
@@ -38,19 +41,67 @@ public class JDBC {
 		return connection;
 	}
 
+	/**
+	 * @param connection
+	 * @return statement 创建一个声明 用于执行SQL语句
+	 */
 	public static Statement getStatement(Connection connection) {
+		if (connection == null) {
+			System.out.println("nulllllllllllllllllllllllllll");
+		}
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			if (statement != null) {
-
-			}
 		}
 		return statement;
+	}
+
+	/**
+	 * 
+	 * @param statement
+	 * @param sql
+	 * @return resultSet 执行一条SQL语句，并且返回获得的指
+	 */
+	public static ResultSet executeQuery(Statement statement, String sql) {
+		ResultSet resultSet = null;
+		try {
+			resultSet = statement.executeQuery(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return resultSet;
+	}
+
+	/**
+	 * @param statement
+	 *            关闭statement
+	 */
+	public static void close(Statement statement) {
+		if (statement != null) {
+			try {
+				statement.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			statement = null;
+		}
+	}
+
+	/**
+	 * @param connection
+	 *            关闭连接 connection
+	 */
+	public static void close(Connection connection) {
+		if (connection != null) {
+			try {
+				connection.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			connection = null;
+		}
 	}
 
 }

@@ -1,87 +1,75 @@
 <%@page pageEncoding="utf-8"%>
+<%@page
+	import="java.sql.*,java.io.*,java.util.*,com.xinghuo.model.*,com.xinghuo.jdbc.*"%>
+
+<%!private void tree(List<Article> articles, Connection connection, int id,
+			int grade) {
+		String sql = "select * from article where pid = " + id;
+		Statement statement = JDBC.getStatement(connection);
+		ResultSet resultSet = JDBC.executeQuery(statement, sql);
+		try {
+			while (resultSet.next()) {
+				Article article = new Article();
+				article.setId(resultSet.getString("id"));
+				article.setPid(resultSet.getString("pid"));
+				article.setRootid(resultSet.getString("rootid"));
+				article.setTitle(resultSet.getString("title"));
+				article.setIsleaf(resultSet.getString("isleaf").equals("0") ? true
+						: false);
+				article.setPdate(resultSet.getDate("pdate"));
+				article.setGrade(grade);
+				articles.add(article);
+				if (!article.isIsleaf()) {
+					tree(articles, connection,
+							Integer.valueOf(article.getId()), grade + 1);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}%>
+
+<%
+	List<Article> articles = new ArrayList<Article>();
+	Connection connection = JDBC.getConnection();
+	tree(articles, connection, 0, 0);
+	JDBC.close(connection);
+%>
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html class='csdn-bbs'>
+<html>
 <head>
-<script id="allmobilize" charset="utf-8"
-	src="http://a.yunshipei.com/1327c36bdd7197e30fd9f4b48d1a5bcc/allmobilize.min.js"></script>
-<meta http-equiv="Cache-Control" content="no-transform" />
-<link rel="alternate" media="handheld" href="#" />
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Web 开发论坛-CSDN论坛-CSDN.NET-中国最大的IT技术社区</title>
-<link href="/assets/index-d4be409d127e37381f8dd32f3df7a29d.css"
-	media="screen" rel="stylesheet" type="text/css" />
-<link href="//static.csdn.net/public/themes/default/css/btn.css"
-	media="screen" rel="stylesheet" type="text/css" />
-<script src="/assets/application-99904a9de34bdfafccfcb75f0ffbe29d.js"
-	type="text/javascript"></script>
-
+<title>Web 开发论坛</title>
 
 <meta content="Web 开发, Web 开发教程，Web 开发论坛" name="keywords"></meta>
-<meta
-	content="CSDNWeb 开发论坛，是国内最好的Web 开发论坛，提供Web 开发论坛，Web 开发技术交流等。CSDN论坛，中国最大的IT技术社区"
-	name="description"></meta>
-<link href="/assets/main-60d4b99571ca569dc94bd81fac2f4c3e.css"
-	media="screen" rel="stylesheet" type="text/css" />
-<script src="http://counter.csdn.net/a/js/AreaCounter.js"
-	type="text/javascript" charset="utf-8"></script>
-
-
-<!--  js for ask  end-->
+<meta content="Web 开发论坛，提供Web 开发论坛，Web 开发技术交流等。" name="description"></meta>
 </head>
+
 <body id="forums-show" class="topic-list open">
-	<!-- <script type="text/javascript" src="http://c.csdnimg.cn/pubnav/js/pub_topnav_2011.js"></script> -->
-
-	<!--全屏-->
-	<script type="text/javascript"
-		ads-src="http://csdnim.qtmojo.com/main/s?user=allyestest|allyestest|allyestest0410&db=csdnim&border=0&local=yes&js=ie"
-		src="http://creatim.qtmojo.cn/td/AllyesDeliver.min.js" charset="gbk"></script>
-	<!--全屏-->
-
-	<!--浮标-->
-	<script type="text/javascript"
-		ads-src="http://csdnim.qtmojo.com/main/s?user=csdn|homepage|floating_1&db=csdnim&border=0&local=yes&js=ie"
-		src="http://creatim.qtmojo.cn/td/AllyesDeliver.min.js" charset="gbk"></script>
-	<!--浮标-->
-
-	<script id="toolbar-tpl-scriptId" skin="black" prod="bbs" fixed="true"
-		src="http://static.csdn.net/public/common/toolbar/js/html.js"
-		type="text/javascript"></script>
-	<!-- 统计代码 -->
-	<script type="text/javascript">
-		var protocol = window.location.protocol;
-		document.write('<script type="text/javascript" src="' + protocol
-				+ '//csdnimg.cn/pubfooter/js/repoAddr2.js?v=' + Math.random()
-				+ '"></'+'script>');
-	</script>
 
 
 
-	<script src="/assets/left_menu-ef57939945b8032d8d89ee4491bb55db.js"
-		type="text/javascript"></script>
-	<script type="text/javascript"
-		src="http://c.csdnimg.cn/pig/pubjs/cnick.js"></script>
-	<script src="/dynamic_js/left_menu.js" type="text/javascript"
-		charset="utf-8"></script>
+
 
 
 	<div class="adv">
 
 
 		<dl>
-			<dt class="red">
-				<h1>fffWeb 开发论坛</h1>
-			</dt>
+			<dt class="red">fffWeb 开发论坛</dt>
 
-			</a>
-			</dd>
+
 			<dd>
-				<strong class="color_004797">版面简介：</strong>Java Web 开发
+				<strong class="red">版面简介：</strong>Java Web 开发
 			</dd>
 		</dl>
 	</div>
 
-	</div>
+
 
 	<div class="bread_nav">
 		<a href="http://www.csdn.net" target="_blank">CSDN</a> <em>&gt;</em> <a
@@ -138,7 +126,7 @@
 				<col width="120px" />
 				<col width="60px" />
 			</colgroup>
-			<tr>
+			<tr bgcolor="#0099ff">
 				<th>标题</th>
 				<th class="tc">分数</th>
 				<th class="tc">提问人</th>
@@ -146,45 +134,37 @@
 				<th class="tc">最后更新时间</th>
 				<th class="tc">功能</th>
 			</tr>
+
+			<%
+				for (Iterator<Article> it = articles.iterator(); it.hasNext();) {
+					Article article = it.next();
+					String preStr = "";
+					for (int i = 0; i < article.getGrade(); i++) {
+						preStr += "---";
+					}
+			%>
 			<tr>
-				<td class="title"><strong class="green">？</strong> <a
-					href="/topics/391819631" target="_blank"
-					title="项目包部署到服务器出现问题!跪求大神解决!">项目包部署到服务器出现问题!跪求大神解决!</a> <span
-					class="forum_link">[<span class="parent"><a
-							href="/forums/Java">Java</a></span> <a href="/forums/Java_WebDevelop">Web
-							开发</a>]
-				</span></td>
+				<td class="title"><strong class="green">！</strong> <a
+					href="articlDetail.jsp?id=<%=article.getId()%>" target="_blank"
+					title="<%=article.getTitle()%>"><%=preStr + article.getTitle()%></a>
 				<td class="tc">40</td>
 				<td class="tc"><a href="http://my.csdn.net/qq_15063859"
-					rel="nofollow" target="_blank" title="qq_15063859">qq_15063859</a><br />
-					<span class="time">08-31 09:23</span></td>
+					rel="nofollow" target="_blank" title="qq_15063859">代码人</a><br /> <span
+					class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+						.format(article.getPdate())%></span></td>
 				<td class="tc">4</td>
 				<td class="tc"><a href="http://my.csdn.net/qq_15063859"
-					rel="nofollow" target="_blank" title="qq_15063859">qq_15063859</a><br />
-					<span class="time">08-31 10:02</span></td>
+					rel="nofollow" target="_blank" title="喜欢代码人">qq_15063859</a><br />
+					<span class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+						.format(article.getPdate())%></span></td>
 				<td class="tc"><a href="/topics/391819631/close"
 					target="_blank">管理</a></td>
 			</tr>
-			<tr>
-				<td class="title"><strong class="green">？</strong> <a
-					href="/topics/391819648" target="_blank" title="一个系统接入有拦截器的SSH系统">一个系统接入有拦截器的SSH系统</a>
-					<span class="forum_link">[<span class="parent"><a
-							href="/forums/Java">Java</a></span> <a href="/forums/Java_WebDevelop">Web
-							开发</a>]
-				</span></td>
-				<td class="tc">20</td>
-				<td class="tc"><a href="http://my.csdn.net/u013691289"
-					rel="nofollow" target="_blank" title="u013691289">u013691289</a><br />
-					<span class="time">08-31 09:55</span></td>
-				<td class="tc">0</td>
-				<td class="tc"><a href="http://my.csdn.net/u013691289"
-					rel="nofollow" target="_blank" title="u013691289">u013691289</a><br />
-					<span class="time">08-31 09:55</span></td>
-				<td class="tc"><a href="/topics/391819648/close"
-					target="_blank">管理</a></td>
-			</tr>
+			<%
+				}
+			%>
 
-			<tr>
+			<tr bgcolor="#0099ff">
 				<th>标题</th>
 				<th class="tc">分数</th>
 				<th class="tc">提问人</th>

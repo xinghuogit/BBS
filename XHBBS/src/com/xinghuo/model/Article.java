@@ -16,6 +16,7 @@
 package com.xinghuo.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @文件名称：Article.java 文章的bean类
@@ -32,9 +33,9 @@ public class Article implements Serializable {
 	private String rootid;
 	private String title;
 	private String cont;
-	private String pdate;
-	private String isleaf;
-	private String grade;
+	private Date pdate;
+	private boolean isleaf;
+	private int grade;
 
 	public String getId() {
 		return id;
@@ -76,27 +77,28 @@ public class Article implements Serializable {
 		this.cont = cont;
 	}
 
-	public String getPdate() {
+	public Date getPdate() {
 		return pdate;
 	}
 
-	public void setPdate(String pdate) {
+	public void setPdate(Date pdate) {
 		this.pdate = pdate;
 	}
 
-	public String getIsleaf() {
+	public boolean isIsleaf() {
 		return isleaf;
 	}
 
-	public void setIsleaf(String isleaf) {
+	public void setIsleaf(boolean isleaf) {
 		this.isleaf = isleaf;
 	}
 
-	public String getGrade() {
+	public int getGrade() {
 		return grade;
 	}
 
-	public void setGrade(String grade) {
+	public void setGrade(int grade) {
 		this.grade = grade;
 	}
+
 }
