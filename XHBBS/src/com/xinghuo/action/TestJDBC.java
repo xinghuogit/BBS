@@ -37,7 +37,7 @@ public class TestJDBC {
 
 		for (Iterator<Article> it = articles.iterator(); it.hasNext();) {
 			Article article = it.next();
-			System.out.println("1011");
+			System.out.println("1011" + article.getCont());
 		}
 	}
 
@@ -56,8 +56,9 @@ public class TestJDBC {
 				article.setIsleaf(resultSet.getString("isleaf").equals("0") ? true
 						: false);
 				article.setPdate(resultSet.getDate("pdate"));
-				String format = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(article.getPdate());
-				System.out.println(article.getPdate()+format);
+				String format = new java.text.SimpleDateFormat(
+						"yyyy-MM-dd HH:mm:ss").format(article.getPdate());
+				System.out.println(article.getPdate() + format);
 				article.setGrade(grade);
 				articles.add(article);
 				if (!article.isIsleaf()) {

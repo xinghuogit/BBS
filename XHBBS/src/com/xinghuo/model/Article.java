@@ -16,6 +16,8 @@
 package com.xinghuo.model;
 
 import java.io.Serializable;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 
 /**
@@ -101,4 +103,21 @@ public class Article implements Serializable {
 		this.grade = grade;
 	}
 
+	public void parseData(ResultSet resultSet) {
+		try {
+			if (resultSet != null) {
+				setId(resultSet.getString("id"));
+				setPid(resultSet.getString("pid"));
+				setRootid(resultSet.getString("rootid"));
+				setTitle(resultSet.getString("title"));
+				setIsleaf(resultSet.getString("isleaf").equals("0") ? true
+						: false);
+				setPdate(resultSet.getTimestamp("pdate"));
+				setCont(resultSet.getString("cont"));
+				setGrade(0);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }

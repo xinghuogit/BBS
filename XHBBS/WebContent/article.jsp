@@ -10,14 +10,7 @@
 		try {
 			while (resultSet.next()) {
 				Article article = new Article();
-				article.setId(resultSet.getString("id"));
-				article.setPid(resultSet.getString("pid"));
-				article.setRootid(resultSet.getString("rootid"));
-				article.setTitle(resultSet.getString("title"));
-				article.setIsleaf(resultSet.getString("isleaf").equals("0") ? true
-						: false);
-				article.setPdate(resultSet.getDate("pdate"));
-				article.setGrade(grade);
+				article.parseData(resultSet);
 				articles.add(article);
 				if (!article.isIsleaf()) {
 					tree(articles, connection,
@@ -26,6 +19,9 @@
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			JDBC.close(resultSet);
+			JDBC.close(statement);
 		}
 
 	}%>
@@ -145,20 +141,20 @@
 			%>
 			<tr>
 				<td class="title"><strong class="green">！</strong> <a
-					href="articlDetail.jsp?id=<%=article.getId()%>" target="_blank"
+					href="articleDetail.jsp?id=<%=article.getId()%>" target="_blank"
 					title="<%=article.getTitle()%>"><%=preStr + article.getTitle()%></a>
-				<td class="tc">40</td>
-				<td class="tc"><a href="http://my.csdn.net/qq_15063859"
-					rel="nofollow" target="_blank" title="qq_15063859">代码人</a><br /> <span
-					class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+					<td class="tc">40</td>
+					<td class="tc"><a href="http://my.csdn.net/qq_15063859"
+						rel="nofollow" target="_blank" title="qq_15063859">代码人</a><br />
+						<span class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 						.format(article.getPdate())%></span></td>
-				<td class="tc">4</td>
-				<td class="tc"><a href="http://my.csdn.net/qq_15063859"
-					rel="nofollow" target="_blank" title="喜欢代码人">qq_15063859</a><br />
-					<span class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+					<td class="tc">4</td>
+					<td class="tc"><a href="http://my.csdn.net/qq_15063859"
+						rel="nofollow" target="_blank" title="喜欢代码人">qq_15063859</a><br />
+						<span class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 						.format(article.getPdate())%></span></td>
-				<td class="tc"><a href="/topics/391819631/close"
-					target="_blank">管理</a></td>
+					<td class="tc"><a href="/topics/391819631/close"
+						target="_blank">管理</a></td>
 			</tr>
 			<%
 				}
