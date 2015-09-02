@@ -46,9 +46,6 @@ public class JDBC {
 	 * @return statement 创建一个声明 用于执行SQL语句
 	 */
 	public static Statement getStatement(Connection connection) {
-		if (connection == null) {
-			System.out.println("nulllllllllllllllllllllllllll");
-		}
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -62,7 +59,7 @@ public class JDBC {
 	 * 
 	 * @param statement
 	 * @param sql
-	 * @return resultSet 执行一条SQL语句，并且返回获得的指
+	 * @return resultSet 执行一条SQL语句，并且返回获得的值
 	 */
 	public static ResultSet executeQuery(Statement statement, String sql) {
 		ResultSet resultSet = null;
@@ -72,6 +69,39 @@ public class JDBC {
 			e.printStackTrace();
 		}
 		return resultSet;
+	}
+
+	/**
+	 * 
+	 * @param connection
+	 * @param sql
+	 * @return preparedStatement 操纵数据库SQL语句
+	 */
+	public static PreparedStatement preparedStatement(Connection connection,
+			String sql) {
+		PreparedStatement preparedStatement = null;
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return preparedStatement;
+	}
+
+	/**
+	 * 
+	 * @param resultSet
+	 *            关闭resultSet
+	 */
+	public static void close(ResultSet resultSet) {
+		if (resultSet != null) {
+			try {
+				resultSet.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			resultSet = null;
+		}
 	}
 
 	/**
