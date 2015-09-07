@@ -2,7 +2,6 @@
 <%@page
 	import="java.sql.*,java.io.*,java.util.*,com.xinghuo.model.*,com.xinghuo.jdbc.*"%>
 
-<!-- 注释 -->
 <%!private void tree(List<Article> articles, Connection connection, int id,
 			int grade) {
 		String sql = "select * from article where pid = " + id;
