@@ -18,7 +18,7 @@ package com.xinghuo.jdbc;
 import java.sql.*;
 
 /**
- * @文件名称：JDBC.java
+ * @文件名称：JDBC.java  
  * 
  *                 连接数据库的类
  */
