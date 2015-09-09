@@ -15,7 +15,19 @@
 		out.println("解析ID再次出错");
 		return;
 	}
-	
+
+	String strPId = request.getParameter("pid");
+	if (strId == null || strId.trim().equals("")) {
+		out.println("传过来的strPId出错");
+		return;
+	}
+	int pid = 0;
+	try {
+		pid = Integer.parseInt(strPId);
+	} catch (NumberFormatException e) {
+		out.println("解析strPId再次出错");
+		return;
+	}
 
 	Article article = null;
 	String sql = "select * from article where id=" + id;
@@ -24,7 +36,7 @@
 	ResultSet resultSet = JDBC.executeQuery(statement, sql);
 	if (resultSet.next()) {
 		article = new Article();
-		article.parseData(resultSet);
+		article.parseData(resultSet, pid);
 	}
 	JDBC.close(resultSet);
 	JDBC.close(statement);
