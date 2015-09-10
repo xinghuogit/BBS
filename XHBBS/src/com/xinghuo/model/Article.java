@@ -103,7 +103,7 @@ public class Article implements Serializable {
 		this.grade = grade;
 	}
 
-	public void parseData(ResultSet resultSet) {
+	public void parseData(ResultSet resultSet, int grade) {
 		try {
 			if (resultSet != null) {
 				setId(resultSet.getString("id"));
@@ -114,7 +114,7 @@ public class Article implements Serializable {
 						: false);
 				setPdate(resultSet.getTimestamp("pdate"));
 				setCont(resultSet.getString("cont"));
-				setGrade(0);
+				setGrade(grade);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

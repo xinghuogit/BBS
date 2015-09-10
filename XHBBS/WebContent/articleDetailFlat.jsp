@@ -30,13 +30,17 @@
 	}
 
 	Article article = null;
-	String sql = "select * from article where id=" + id;
+	List<Article> articles = new ArrayList<Article>();
+	out.println(id);
+	String sql = "select * from article where rootid=" + id
+			+ " order by pdate asc";
 	Connection connection = JDBC.getConnection();
 	Statement statement = JDBC.getStatement(connection);
 	ResultSet resultSet = JDBC.executeQuery(statement, sql);
-	if (resultSet.next()) {
+	while (resultSet.next()) {
 		article = new Article();
 		article.parseData(resultSet, pid);
+		articles.add(article);
 	}
 	JDBC.close(resultSet);
 	JDBC.close(statement);
@@ -48,7 +52,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 
-<title>java方法里每个参数是不是必输的？-CSDN论坛-CSDN.NET-中国最大的IT技术社区</title>
+<title>article.getTitle()</title>
 
 
 
@@ -86,6 +90,12 @@
 
 	</div>
 	<div class="detailed">
+		<%-- 开始循环 --%>
+		<%
+			for (int i = 0; i < articles.size(); i++) {
+				String st = i == 0 ? "楼主" : "第" + i + "楼";
+		%>
+
 		<table border="0" cellspacing="0" cellpadding="0" id="post-400337265"
 			class="post  " data-post-id="400337265" data-is-topic-locked="false">
 			<colgroup>
@@ -116,17 +126,20 @@
 						data-floor="3">
 						<div class="data">
 							<span class="fr"> <a
-								href="http://bbs.csdn.net/topics/391820864#post-400337265">#3</a>
+								href="http://bbs.csdn.net/topics/391820864#post-400337265"><%=st%></a>
 								得分：0
 							</span> <span class="time"> <%=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-					.format(article.getPdate())%>
+						.format(articles.get(i).getPdate())%>
 							</span>
 							<!--<span class="time" style="font-size: 12px">-->
 							<!--<img src="/assets/phone.png"/>&nbsp;来自移动客户端-->
 							<!--</span>-->
 						</div>
 						<div class="post_body">
-							<%=article.getCont()%>
+							<%=articles.get(i).getTitle()%>
+						</div>
+						<div class="post_body">
+							<%=articles.get(i).getCont()%>
 						</div>
 
 					</td>
@@ -134,7 +147,10 @@
 
 			</tbody>
 		</table>
-
+		<%-- 结束循环 --%>
+		<%
+			}
+		%>
 	</div>
 
 	</body>

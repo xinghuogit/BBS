@@ -3,13 +3,54 @@
 	import="java.sql.*,java.io.*,java.util.*,com.xinghuo.model.*,com.xinghuo.jdbc.*"%>
 
 <%
+	final int PAGE_SIZE = 10;
+	int pageNo = 1;
+	String strPageNo = request.getParameter("strPageNo");
+	if (strPageNo != null && !strPageNo.trim().equals("")) {
+		try {
+			pageNo = Integer.parseInt(strPageNo);
+		} catch (NumberFormatException e) {
+			pageNo = 1;
+		}
+	}
+
+	if (pageNo <= 0) {
+		pageNo = 1;
+	}
+
+	int totalPages = 0;
+
 	List<Article> articles = new ArrayList<Article>();
-	Connection connection = JDBC.getConnection();
-	tree(articles, connection, 0, 0);
-	JDBC.close(connection);
+	Connection connectionConunt = JDBC.getConnection();
+	Statement statementConunt = JDBC.getStatement(connectionConunt);
+	ResultSet resultSetConunt = JDBC.executeQuery(statementConunt,
+			"select conunt(*) from article where pid = 0");
+	resultSetConunt.next();
+	int totalRecord = resultSetConunt.getInt(1);
+	totalPages = (totalRecord + PAGE_SIZE - 1) / PAGE_SIZE;
+
+	if (pageNo > totalPages) {
+		pageNo = totalPages;
+	}
+
+	int startPos = (pageNo - 1) * PAGE_SIZE;
+	String sql = "select * from article where pid = 0 order by pdate desc limit "
+			+ startPos + "," + PAGE_SIZE;
+
+	ResultSet resultSet = JDBC.executeQuery(statementConunt, sql);
+
+	while (resultSet.next()) {
+		Article article = new Article();
+		article.parseData(resultSet, 0);
+		articles.add(article);
+	}
+	JDBC.close(resultSet);
+	JDBC.close(resultSetConunt);
+	JDBC.close(statementConunt);
+	JDBC.close(connectionConunt);
 %>
 
-<%!private void tree(List<Article> articles, Connection connection, int id,
+<%--!private void tree(List<Article> articles, Connection connection, int id,
 			int grade) {
 		String sql = "select * from article where pid = " + id;
 		Statement statement = JDBC.getStatement(connection);
@@ -30,7 +71,7 @@
 			JDBC.close(resultSet);
 			JDBC.close(statement);
 		}
-	}%>
+	}--%>
 
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -113,8 +154,8 @@
 			%>
 			<tr>
 				<td class="title"><strong class="green">！</strong> <a
-					href="articleDetail.jsp?id=<%=article.getId()%>&pid=<%=article.getGrade()%>"
-					target="_blank" title="<%=article.getTitle()%>"><%=preStr + article.getTitle()%></a>
+					href="articleDetailFlat.jsp?id=<%=article.getId()%>&pid=<%=article.getGrade()%>"
+					target="_blank" title="<%=article.getTitle()%>"><%=article.getTitle()%></a>
 					<td class="tc">40</td>
 					<td class="tc"><a href="http://my.csdn.net/qq_15063859"
 						rel="nofollow" target="_blank" title="qq_15063859">代码人</a><br />
