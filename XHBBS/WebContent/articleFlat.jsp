@@ -24,7 +24,7 @@
 	Connection connectionConunt = JDBC.getConnection();
 	Statement statementConunt = JDBC.getStatement(connectionConunt);
 	ResultSet resultSetConunt = JDBC.executeQuery(statementConunt,
-			"select conunt(*) from article where pid = 0");
+			"select count(*) from article where pid = 0");
 	resultSetConunt.next();
 	int totalRecord = resultSetConunt.getInt(1);
 	totalPages = (totalRecord + PAGE_SIZE - 1) / PAGE_SIZE;
@@ -44,6 +44,7 @@
 		article.parseData(resultSet, 0);
 		articles.add(article);
 	}
+
 	JDBC.close(resultSet);
 	JDBC.close(resultSetConunt);
 	JDBC.close(statementConunt);
@@ -105,23 +106,30 @@
 			<a href="reply.jsp?id=0&rootId=1" target="_blank"><span>发帖</span></a>
 		</div>
 
-		<ul>
-			<li class="select"><a href="/forums/Java_WebDevelop">首页</a></li>
+		<div>
+			<a href="articleFlat.jsp">首页</a>
 
-			<li class="select"><a href="/forums/Java_WebDevelop">1</a></li>
-
-			<li class=""><a href="/forums/Java_WebDevelop?page=2">2</a></li>
-
-			<li class="page gap">...</li>
-
-			<li><a href="/forums/Java_WebDevelop?page=2" class="next">下一页</a>
-			</li>
-
-			<li class=""><a href="/forums/Java_WebDevelop?page=719">尾页</a></li>
-
-			<li><span>总数：35940，</span><span>共719页</span></li>
-		</ul>
-
+			<%
+				String end = "";
+				if (totalPages > 6) {
+					for (int i = 1; i < 7; i++) {
+						end = i + "";
+			%>
+			<a href="articleFlat.jsp?strPageNo=<%=end%>"><%=end%></a>
+			<%
+				}
+				} else {
+					for (int i = 1; i < totalPages + 1; i++) {
+						end = i + "";
+			%>
+			<a href="articleFlat.jsp?strPageNo=<%=end%>"><%=end%></a>
+			<%
+				}
+				}
+			%>
+			... <a href="articleFlat.jsp?strPageNo=<%=pageNo + 1%>" class="next">下一页</a>
+			<a href="articleFlat.jsp?strPageNo=<%=totalPages%>">尾页</a> <br /> <span>总数：35940，</span><span>共719页</span>
+		</div>
 	</div>
 
 	<div class="content">
