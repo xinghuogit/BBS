@@ -21,7 +21,7 @@
 				Article article = new Article();
 				article.parseData(resultSet, grade);
 				articles.add(article);
-				
+
 				if (!article.isIsleaf()) {
 					tree(articles, connection,
 							Integer.valueOf(article.getId()), grade + 1);
@@ -145,7 +145,7 @@
 						<span class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
 						.format(articles.get(i).getPdate())%></span></td>
 					<td class="tc"><a
-						href="delete.jsp?id=<%=articles.get(i).getId()%>&pid=<%=articles.get(i).getGrade()%>&isleaf=<%=articles.get(i).isIsleaf()%>"
+						href="delete.jsp?id=<%=articles.get(i).getId()%>&pid=<%=articles.get(i).getPid()%>&isleaf=<%=articles.get(i).isIsleaf()%>"
 						target="_blank">删除</a></td>
 			</tr>
 			<%

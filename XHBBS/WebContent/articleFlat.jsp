@@ -3,7 +3,15 @@
 	import="java.sql.*,java.io.*,java.util.*,com.xinghuo.model.*,com.xinghuo.jdbc.*"%>
 
 <%
-	final int PAGE_SIZE = 1;
+	boolean logind = false;
+	String login = (String) session.getAttribute("login");
+	if (login != null && login.trim().equals("true")) {
+		logind = true;
+	}
+%>
+
+<%
+	final int PAGE_SIZE = 3;
 	int pageNo = 1;
 	String strPageNo = request.getParameter("strPageNo");
 	if (strPageNo != null && !strPageNo.trim().equals("")) {
@@ -107,7 +115,7 @@
 		</div>
 
 		<div>
-			<a href="articleFlat.jsp">首页</a>
+			<a href="articleFlat.jsp">首页</a>第<%=pageNo%>页
 
 			<%
 				String end = "";
@@ -148,47 +156,46 @@
 				<th class="tc">提问人</th>
 				<th class="tc">回复数</th>
 				<th class="tc">最后更新时间</th>
-				<th class="tc">功能</th>
+				<th class="tc">删除</th>
 			</tr>
 
 			<%
-				for (Iterator<Article> it = articles.iterator(); it.hasNext();) {
-					Article article = it.next();
-					String preStr = "";
-					for (int i = 0; i < article.getGrade(); i++) {
-						out.print(article.getGrade());
-						preStr += "---";
-					}
+				String url = request.getScheme() + "://" + request.getServerName()
+						+ ":" + request.getServerPort();
+				url += request.getContextPath();
+				url += request.getServletPath() + "?" + request.getQueryString();
+				//System.out.println(url);
+				//System.out.println(request.getRequestURI());
+				//System.out.println(request.getRequestURL());
+				for (int i = 0; i < articles.size(); i++) {
 			%>
 			<tr>
 				<td class="title"><strong class="green">！</strong> <a
-					href="articleDetailFlat.jsp?id=<%=article.getId()%>&pid=<%=article.getGrade()%>"
-					target="_blank" title="<%=article.getTitle()%>"><%=article.getTitle()%></a>
+					href="articleDetailFlat.jsp?id=<%=articles.get(i).getId()%>&pid=<%=articles.get(i).getGrade()%>"
+					target="_blank" title="<%=articles.get(i).getTitle()%>"><%=articles.get(i).getTitle()%></a>
 					<td class="tc">40</td>
 					<td class="tc"><a href="http://my.csdn.net/qq_15063859"
 						rel="nofollow" target="_blank" title="qq_15063859">代码人</a><br />
 						<span class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-						.format(article.getPdate())%></span></td>
+						.format(articles.get(i).getPdate())%></span></td>
 					<td class="tc">4</td>
 					<td class="tc"><a href="http://my.csdn.net/qq_15063859"
 						rel="nofollow" target="_blank" title="喜欢代码人">qq_15063859</a><br />
 						<span class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-						.format(article.getPdate())%></span></td>
-					<td class="tc"><a href="/topics/391819631/close"
-						target="_blank">管理</a></td>
+						.format(articles.get(i).getPdate())%></span></td> <%
+ 	if (logind) {
+ %>
+					<td class="tc"><a
+						href="Modfiy.jsp?id=<%=articles.get(i).getId()%>&url=<%=url%>" target="_blank">编辑</a></td>
+					<td class="tc"><a
+						href="delete.jsp?id=<%=articles.get(i).getId()%>&pid=<%=articles.get(i).getPid()%>&isleaf=<%=articles.get(i).isIsleaf()%>&url=<%=url%>"
+						target="_blank">删除</a></td> <%
+ 	}
+ %>
 			</tr>
 			<%
 				}
 			%>
-
-			<tr bgcolor="#0099ff">
-				<th>标题</th>
-				<th class="tc">分数</th>
-				<th class="tc">提问人</th>
-				<th class="tc">回复数</th>
-				<th class="tc">最后更新时间</th>
-				<th class="tc">功能</th>
-			</tr>
 		</table>
 	</div>
 </body>
