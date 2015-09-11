@@ -5,7 +5,9 @@
 <%
 	List<Article> articles = new ArrayList<Article>();
 	Connection connection = JDBC.getConnection();
+
 	tree(articles, connection, 0, 0);
+
 	JDBC.close(connection);
 %>
 
@@ -15,6 +17,26 @@
 		Statement statement = JDBC.getStatement(connection);
 		ResultSet resultSet = JDBC.executeQuery(statement, sql);
 		try {
+			while (resultSet.next()) {
+				Article article = new Article();
+				article.parseData(resultSet, grade);
+				articles.add(article);
+				System.out.println("article" + article.getId());
+				if (!article.isIsleaf()) {
+					tree(articles, connection,
+							Integer.valueOf(article.getId()), grade + 1);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBC.close(resultSet);
+			JDBC.close(statement);
+		}
+
+	}%>
+
+<%--try {
 			while (resultSet.next()) {
 				Article article = new Article();
 				article.parseData(resultSet, grade);
@@ -29,9 +51,7 @@
 		} finally {
 			JDBC.close(resultSet);
 			JDBC.close(statement);
-		}
-	}%>
-
+		} --%>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -99,47 +119,38 @@
 				<th class="tc">提问人</th>
 				<th class="tc">回复数</th>
 				<th class="tc">最后更新时间</th>
-				<th class="tc">功能</th>
+				<th class="tc">删除</th>
 			</tr>
 
 			<%
-				for (Iterator<Article> it = articles.iterator(); it.hasNext();) {
-					Article article = it.next();
+				for (int i = 0; i < articles.size(); i++) {
 					String preStr = "";
-					for (int i = 0; i < article.getGrade(); i++) {
-						out.print(article.getGrade());
+					for (int j = 0; j < articles.get(i).getGrade(); j++) {
+						out.print(articles.get(i).getGrade());
 						preStr += "---";
 					}
 			%>
 			<tr>
 				<td class="title"><strong class="green">！</strong> <a
-					href="articleDetail.jsp?id=<%=article.getId()%>&pid=<%=article.getGrade()%>"
-					target="_blank" title="<%=article.getTitle()%>"><%=preStr + article.getTitle()%></a>
-					<td class="tc">40</td>
+					href="articleDetail.jsp?id=<%=articles.get(i).getId()%>&pid=<%=articles.get(i).getGrade()%>"
+					target="_blank" title="<%=articles.get(i).getTitle()%>"><%=preStr + articles.get(i).getTitle()%></a>
+					<td class="tc"><%=i + 1%></td>
 					<td class="tc"><a href="http://my.csdn.net/qq_15063859"
 						rel="nofollow" target="_blank" title="qq_15063859">代码人</a><br />
 						<span class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-						.format(article.getPdate())%></span></td>
+						.format(articles.get(i).getPdate())%></span></td>
 					<td class="tc">4</td>
 					<td class="tc"><a href="http://my.csdn.net/qq_15063859"
 						rel="nofollow" target="_blank" title="喜欢代码人">qq_15063859</a><br />
 						<span class="time"><%=new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-						.format(article.getPdate())%></span></td>
-					<td class="tc"><a href="/topics/391819631/close"
-						target="_blank">管理</a></td>
+						.format(articles.get(i).getPdate())%></span></td>
+					<td class="tc"><a
+						href="delete.jsp?id=<%=articles.get(i).getId()%>&pid=<%=articles.get(i).getGrade()%>&isleaf=<%=articles.get(i).isIsleaf()%>"
+						target="_blank">删除</a></td>
 			</tr>
 			<%
 				}
 			%>
-
-			<tr bgcolor="#0099ff">
-				<th>标题</th>
-				<th class="tc">分数</th>
-				<th class="tc">提问人</th>
-				<th class="tc">回复数</th>
-				<th class="tc">最后更新时间</th>
-				<th class="tc">功能</th>
-			</tr>
 		</table>
 	</div>
 </body>

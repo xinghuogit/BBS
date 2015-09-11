@@ -1,3 +1,5 @@
+<!-- 发表新主题 -->
+
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page pageEncoding="utf-8"%>
 <%@page

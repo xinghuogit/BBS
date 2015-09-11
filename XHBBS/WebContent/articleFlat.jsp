@@ -3,7 +3,7 @@
 	import="java.sql.*,java.io.*,java.util.*,com.xinghuo.model.*,com.xinghuo.jdbc.*"%>
 
 <%
-	final int PAGE_SIZE = 10;
+	final int PAGE_SIZE = 1;
 	int pageNo = 1;
 	String strPageNo = request.getParameter("strPageNo");
 	if (strPageNo != null && !strPageNo.trim().equals("")) {

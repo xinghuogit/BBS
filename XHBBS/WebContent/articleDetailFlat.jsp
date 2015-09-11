@@ -38,9 +38,7 @@
 	Statement statement = JDBC.getStatement(connection);
 	ResultSet resultSet = JDBC.executeQuery(statement, sql);
 	while (resultSet.next()) {
-		article = new Article();
-		article.parseData(resultSet, pid);
-		articles.add(article);
+		System.out.print("11"+111);
 	}
 	JDBC.close(resultSet);
 	JDBC.close(statement);

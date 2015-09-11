@@ -18,9 +18,9 @@ package com.xinghuo.jdbc;
 import java.sql.*;
 
 /**
- * @文件名称：JDBC.java  
+ * @文件名称：JDBC.java
  * 
- *                 连接数据库的类  
+ *                 连接数据库的类
  */
 public class JDBC {
 
@@ -86,6 +86,20 @@ public class JDBC {
 			e.printStackTrace();
 		}
 		return preparedStatement;
+	}
+
+	public static int executeUpdata(Connection connection, String sql) {
+		int ret = 0;
+		Statement statement = null;
+		try {
+			statement = getStatement(connection);
+			ret = statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(statement);
+		}
+		return ret;
 	}
 
 	/**
