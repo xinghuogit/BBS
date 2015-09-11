@@ -21,7 +21,7 @@
 				Article article = new Article();
 				article.parseData(resultSet, grade);
 				articles.add(article);
-				System.out.println("article" + article.getId());
+				
 				if (!article.isIsleaf()) {
 					tree(articles, connection,
 							Integer.valueOf(article.getId()), grade + 1);

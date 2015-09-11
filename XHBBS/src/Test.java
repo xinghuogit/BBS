@@ -26,40 +26,68 @@ public class Test {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSetConunt = null;
+		/**
+		 * 删除然后把节点等于0
+		 */
 		try {
-			int totalPages = 0;
 			connection = JDBC.getConnection();
+
 			statement = JDBC.getStatement(connection);
 			resultSetConunt = JDBC.executeQuery(statement,
-					"select count(*) from article where pid = 0");
+					"select count(*) from article where pid = " + 8);
+
 			resultSetConunt.next();
-			int totalRecord = resultSetConunt.getInt(1);
 
-			while (resultSetConunt.next()) {
-				System.out.println("resultSetConunt");
+			int count = resultSetConunt.getInt(1);
+			System.out.println(count);
+			if (count <= 0) {
+				JDBC.executeUpdata(connection,
+						"update article set isleaf =0 where id = " + 8);
+				System.out.println("11111111111111");
 			}
-
-			totalPages = (totalRecord + PAGE_SIZE - 1) / PAGE_SIZE;
-
-			System.out.println(totalRecord + "  a " + totalPages);
 		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			try {
-				if (resultSetConunt != null) {
-					resultSetConunt.close();
-				}
-				if (statement != null) {
-					statement.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
-			}
+			JDBC.close(resultSetConunt);
+			JDBC.close(statement);
+			JDBC.close(connection);
 		}
+
+		// try {
+		// int totalPages = 0;
+		// connection = JDBC.getConnection();
+		// statement = JDBC.getStatement(connection);
+		// resultSetConunt = JDBC.executeQuery(statement,
+		// "select count(*) from article where pid = 0");
+		// resultSetConunt.next();
+		// int totalRecord = resultSetConunt.getInt(1);
+		//
+		// while (resultSetConunt.next()) {
+		// System.out.println("resultSetConunt");
+		// }
+		//
+		// totalPages = (totalRecord + PAGE_SIZE - 1) / PAGE_SIZE;
+		//
+		// System.out.println(totalRecord + "  a " + totalPages);
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		// } finally {
+		// try {
+		// if (resultSetConunt != null) {
+		// resultSetConunt.close();
+		// }
+		// if (statement != null) {
+		// statement.close();
+		// }
+		// if (connection != null) {
+		// connection.close();
+		// }
+		// } catch (SQLException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		//
+		// }
+		// }
 	}
 }

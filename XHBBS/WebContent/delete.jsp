@@ -4,13 +4,13 @@
 
 <%
 	String strId = request.getParameter("id");
-	int id = 0;
+	int id = -1;
 	if (strId != null && !strId.equals("")) {
 		id = Integer.parseInt(strId);
 	}
 
 	String strPid = request.getParameter("pid");
-	int pid = 0;
+	int pid = -1;
 	if (strPid != null && !strPid.equals("")) {
 		pid = Integer.parseInt(strPid);
 	}
@@ -26,10 +26,10 @@
 			"select count(*) from article where pid = " + pid);
 	resultSet.next();
 	int count = resultSet.getInt(1);
-	System.out.println(count);
 	if (count <= 0) {
 		JDBC.executeUpdata(connection,
 				"update article set isleaf =0 where id = " + pid);
+		System.out.println("countid:" + pid);
 	}
 
 	JDBC.close(resultSet);
@@ -44,8 +44,9 @@
 			ResultSet resultSet = JDBC.executeQuery(statement, sql);
 			try {
 				while (resultSet.next()) {
-					System.out.println("whileid"+id);
-					delete(connection, resultSet.getInt("id"),resultSet.getInt("isleaf") == 0);
+					System.out.println("whileid" + id);
+					delete(connection, resultSet.getInt("id"),
+							resultSet.getInt("isleaf") == 0);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -54,7 +55,7 @@
 				JDBC.close(statement);
 			}
 		}
-		System.out.println("id"+id);
+		System.out.println("id" + id);
 		JDBC.executeUpdata(connection, "delete from article where id = " + id);
 	}%>
 
